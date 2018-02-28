@@ -1,0 +1,39 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Authentication API",
+        "description": "An API for authentication",
+        "termsOfService": "",
+        "contact": {
+            "email": "dekarvn@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "URL to the license"
+        },
+        "version": "1.0.0"
+    },
+    "host": "mdr-auth.test",
+    "basePath": "/",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Home Page",
+                "responses": {
+                    "200": {
+                        "description": "Authentication home page"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {},
+    "externalDocs": {
+        "description": "Find out more about my website",
+        "url": "http..."
+    }
+}

@@ -26,4 +26,6 @@ class UserTest extends TestCase
         $this->get('/api/user')->assertStatus(302);
     }
 
+    // it_redirects_the_user_correctly_after_logging_in
+
 }
