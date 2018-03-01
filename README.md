@@ -6,8 +6,9 @@ This application is an authentication server that manages user information and a
 TODO
 
 ## Installation
+Make a copy of `.env.example` to `.env` and make appropriate changes
 ```
-composer install
+composer install && npm install
 php artisan migate
 php artisan passport:install
 ```
