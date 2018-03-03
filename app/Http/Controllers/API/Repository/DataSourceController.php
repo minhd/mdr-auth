@@ -1,7 +1,8 @@
 <?php
 
-namespace MinhD\Http\Controllers;
+namespace MinhD\Http\Controllers\API\Repository;
 
+use MinhD\Http\Controllers\Controller;
 use MinhD\Repository\DataSource;
 use Illuminate\Http\Request;
 
@@ -14,17 +15,9 @@ class DataSourceController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $dataSources = DataSource::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $dataSources;
     }
 
     /**
@@ -46,7 +39,7 @@ class DataSourceController extends Controller
      */
     public function show(DataSource $dataSource)
     {
-        //
+        return $dataSource;
     }
 
     /**

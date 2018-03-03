@@ -19,4 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['namespace' => 'API\Repository'], function() {
     Route::get('repository', 'RepositoryController@index');
+    Route::group(['prefix' => 'repository'], function() {
+
+        Route::bind('datasource', function ($value) {
+            return \MinhD\Repository\DataSource::find($value)->first() ?? abort(404);
+        });
+
+        Route::resource('datasources', 'DataSourceController');
+    });
 });

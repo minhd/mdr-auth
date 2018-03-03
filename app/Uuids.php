@@ -4,16 +4,24 @@
 namespace MinhD;
 
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Uuid as Generator;
 
 trait Uuids
 {
 
+    /**
+     * Boot uuid trait.
+     *
+     * @return void
+     */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->{$model->getKeyName()} = Uuid::uuid4()->toString();
+            if (! Generator::isValid($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = Generator::uuid4()->toString();
+            }
         });
     }
 }
