@@ -22,9 +22,12 @@ Route::group(['namespace' => 'API\Repository'], function() {
     Route::group(['prefix' => 'repository'], function() {
 
         Route::bind('datasource', function ($value) {
-            return \MinhD\Repository\DataSource::find($value)->first() ?? abort(404);
+            return \MinhD\Repository\DataSource::find($value) ?? abort(404);
         });
 
-        Route::resource('datasources', 'DataSourceController');
+        Route::resource('datasources', 'DataSourceController')->middleware('auth:api', ['except'=> 'index,show']);
+        Route::get('datasources', 'DataSourceController@index');
+        Route::get('datasources/{datasource}', 'DataSourceController@show');
+//        Route::resource('datasources', 'DataSourceController', ['middleware' => 'auth:api', 'except'=>['index,show']]);
     });
 });
