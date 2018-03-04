@@ -25,9 +25,10 @@ Route::group(['namespace' => 'API\Repository'], function() {
             return \MinhD\Repository\DataSource::find($value) ?? abort(404);
         });
 
-        Route::resource('datasources', 'DataSourceController')->middleware('auth:api', ['except'=> 'index,show']);
-        Route::get('datasources', 'DataSourceController@index');
-        Route::get('datasources/{datasource}', 'DataSourceController@show');
+        Route::resource('datasources', 'DataSourceController', ['except' => ['edit', 'create']] )->middleware('auth:api');
+        Route::get('datasources', 'DataSourceController@index')->name('datasources.index');
+        Route::get('datasources/{datasource}', 'DataSourceController@show')->name('datasources.show');
+
 //        Route::resource('datasources', 'DataSourceController', ['middleware' => 'auth:api', 'except'=>['index,show']]);
     });
 });

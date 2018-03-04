@@ -5,21 +5,22 @@ namespace MinhD\Http\Controllers\API\Repository;
 use MinhD\Http\Controllers\Controller;
 use MinhD\Repository\DataSource;
 use Illuminate\Http\Request;
+use MinhD\Repository\DataSourceService;
 
 class DataSourceController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // TODO: page
         // TODO: Links Header
-        $dataSources = DataSource::all();
-
-        return $dataSources;
+        $filters = DataSourceService::getFilters($request);
+        return DataSourceService::get($filters);
     }
 
     /**
@@ -30,7 +31,7 @@ class DataSourceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // TODO
     }
 
     /**
@@ -42,17 +43,6 @@ class DataSourceController extends Controller
     public function show(DataSource $dataSource)
     {
         return $dataSource;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \MinhD\Repository\DataSource  $dataSource
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DataSource $dataSource)
-    {
-        //
     }
 
     /**
