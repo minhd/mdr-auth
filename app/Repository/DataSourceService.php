@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use MinhD\User;
 use Symfony\Component\HttpFoundation\Response;
 
+// TODO: extract interface
 // TODO: UnitTest
 class DataSourceService
 {
@@ -21,6 +22,8 @@ class DataSourceService
     ];
 
     private $filters = [];
+
+    /** @var Paginator */
     private $results = null;
 
     private $responseType = null;
@@ -48,7 +51,7 @@ class DataSourceService
 
     public function fetch()
     {
-        $results = DataSource::offset($this->filters['offset']);
+        $results = (new DataSource())->offset($this->filters['offset']);
 
         $this->responseType = "collection";
 
