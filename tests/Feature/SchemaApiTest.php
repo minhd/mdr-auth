@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Laravel\Passport\Passport;
 use MinhD\Repository\Schema;
+use MinhD\Role;
 use MinhD\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -12,6 +13,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class SchemaApiTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->artisan('db:seed', ['--class' => 'DatabaseSeeder']);
+    }
 
     /** @test */
     function it_shows_schemas()
@@ -41,8 +49,8 @@ class SchemaApiTest extends TestCase
     function it_creates_schema()
     {
         $user = factory(User::class)->create();
+        $user->addRole('admin');
         Passport::actingAs($user);
-        // TODO: superuser
 
         $result = $this->postJson(route('schemas.store'), [
             'title' => 'A sample schema',
@@ -58,6 +66,7 @@ class SchemaApiTest extends TestCase
     function it_validates_schema_creation()
     {
         $user = factory(User::class)->create();
+        $user->addRole('admin');
         Passport::actingAs($user);
         // TODO: superuser
 
@@ -73,8 +82,8 @@ class SchemaApiTest extends TestCase
         $schema = factory(Schema::class)->create();
 
         $user = factory(User::class)->create();
+        $user->addRole('admin');
         Passport::actingAs($user);
-        // TODO: superuser
 
         $result = $this->putJson(route('schemas.update', ['schema' => $schema->id]), [
             'title' => 'title changed',
@@ -88,7 +97,16 @@ class SchemaApiTest extends TestCase
     /** @test */
     function it_disallow_updating_schema_without_superuser()
     {
-        // TODO
+        $schema = factory(Schema::class)->create();
+
+        $user = factory(User::class)->create();
+        Passport::actingAs($user);
+
+        $result = $this->putJson(route('schemas.update', ['schema' => $schema->id]), [
+            'title' => 'title changed',
+            'description' => 'description changed'
+        ]);
+        $result->assertStatus(401);
     }
 
     /** @test */
@@ -96,9 +114,8 @@ class SchemaApiTest extends TestCase
     {
         $schema = factory(Schema::class)->create();
         $user = factory(User::class)->create();
-
+        $user->addRole('admin');
         Passport::actingAs($user);
-        // TODO: superuser
 
         $this->deleteJson(route('schemas.destroy', ['schema'=>$schema->id]))
             ->assertStatus(202);

@@ -29,4 +29,25 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'users_roles');
+    }
+
+    public function hasRole($roleName)
+    {
+        return $this->roles->pluck('name')->contains($roleName);
+    }
+
+    public function addRole($roleName)
+    {
+        $role = Role::where('name', $roleName)->first();
+        if ($role) {
+            $this->roles()->save($role);
+            return $this;
+        }
+
+        throw new \Exception("No role $roleName exists");
+    }
 }
