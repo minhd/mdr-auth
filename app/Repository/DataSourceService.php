@@ -4,9 +4,13 @@
 namespace MinhD\Repository;
 
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
+use MinhD\User;
+use Symfony\Component\HttpFoundation\Response;
 
 // TODO: UnitTest
 class DataSourceService
@@ -18,6 +22,8 @@ class DataSourceService
 
     private $filters = [];
     private $results = null;
+
+    private $responseType = null;
 
     public function setFilters(Request $request)
     {
@@ -33,9 +39,18 @@ class DataSourceService
         return $this;
     }
 
+    public function search(Request $request)
+    {
+        return $this->setFilters($request)
+            ->fetch()
+            ->paginatedSearchResponse();
+    }
+
     public function fetch()
     {
         $results = DataSource::offset($this->filters['offset']);
+
+        $this->responseType = "collection";
 
         // TODO: title, description, owner
 
@@ -43,12 +58,7 @@ class DataSourceService
         return $this;
     }
 
-    public function getResults()
-    {
-        return $this->results ? $this->results->items() : null;
-    }
-
-    public function response()
+    public function paginatedSearchResponse()
     {
         $paginator = $this->results;
         $pagination = $paginator->toArray();
@@ -68,17 +78,37 @@ class DataSourceService
 
         $links = implode(", ", $links);
 
-        return response($paginator->items())
+        return response($paginator->items(), Response::HTTP_OK)
             ->header('Link', $links);
-    }
-
-    public function getPaginator() : LengthAwarePaginator
-    {
-        return $this->results;
     }
 
     public function find($id)
     {
         return DataSource::find($id) ?: null;
+    }
+
+    public function create($request, Authenticatable $owner)
+    {
+        $data = array_merge(
+            $request,
+            [ 'user_id' => $owner->id ]
+        );
+        $dataSource = DataSource::create($data);
+
+        $this->results = $dataSource;
+
+        return response($dataSource, Response::HTTP_CREATED);
+    }
+
+    public function update($request, DataSource $dataSource)
+    {
+        $dataSource->update($request);
+        return response($dataSource, Response::HTTP_ACCEPTED);
+    }
+
+    public function delete(DataSource $dataSource)
+    {
+        $dataSource->delete();
+        return response("", Response::HTTP_ACCEPTED);
     }
 }

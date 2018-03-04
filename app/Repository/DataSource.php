@@ -12,8 +12,10 @@ class DataSource extends Model
 
     public $incrementing = false;
 
+    public $fillable = ['title', 'description', 'user_id'];
+
     public function owner()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
