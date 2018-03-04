@@ -4,7 +4,9 @@
 namespace MinhD\Repository;
 
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 
 // TODO: UnitTest
 class DataSourceService
@@ -33,15 +35,44 @@ class DataSourceService
 
     public function fetch()
     {
-        $results = DataSource::limit($this->filters['limit'])->offset($this->filters['offset']);
+        $results = DataSource::offset($this->filters['offset']);
 
         // TODO: title, description, owner
 
-        $this->results = $results->get();
+        $this->results = $results->paginate($this->filters['limit']);
         return $this;
     }
 
     public function getResults()
+    {
+        return $this->results ? $this->results->items() : null;
+    }
+
+    public function response()
+    {
+        $paginator = $this->results;
+        $pagination = $paginator->toArray();
+        $links = [];
+
+        if ($pagination['prev_page_url']) {
+            $prev = "<{$pagination['prev_page_url']}>; rel=\"prev\"";
+            $links[] = $prev;
+        }
+
+        if ($paginator->hasMorePages()) {
+            $links[] = "<{$pagination['next_page_url']}>; rel=\"next\"";
+        }
+
+        $links[] = "<{$pagination['first_page_url']}>; rel=\"first\"";
+        $links[] = "<{$pagination['last_page_url']}>; rel=\"last\"";
+
+        $links = implode(", ", $links);
+
+        return response($paginator->items())
+            ->header('Link', $links);
+    }
+
+    public function getPaginator() : LengthAwarePaginator
     {
         return $this->results;
     }

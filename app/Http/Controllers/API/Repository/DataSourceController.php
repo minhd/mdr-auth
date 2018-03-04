@@ -17,17 +17,10 @@ class DataSourceController extends Controller
      */
     public function index(Request $request)
     {
-
-        $service = new DataSourceService();
-        $service
+        return (new DataSourceService())
             ->setFilters($request)
-            ->fetch();
-
-        $result = $service->getResults();
-
-        // TODO: Link Header
-
-        return $result;
+            ->fetch()
+            ->response();
     }
 
     /**
