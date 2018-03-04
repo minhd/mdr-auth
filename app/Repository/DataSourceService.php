@@ -6,6 +6,7 @@ namespace MinhD\Repository;
 
 use Illuminate\Http\Request;
 
+// TODO: UnitTest
 class DataSourceService
 {
     public static $defaultFilters = [
@@ -13,21 +14,40 @@ class DataSourceService
         'offset' => 0
     ];
 
-    public static function get($filters) {
-        $dataSources = DataSource::limit($filters['limit'])->offset($filters['offset']);
+    private $filters = [];
+    private $results = null;
 
-        return $dataSources->get();
-    }
-
-    public static function getFilters(Request $request)
+    public function setFilters(Request $request)
     {
-        $filters = static::$defaultFilters;
+        $filters = self::$defaultFilters;
 
         $filters['limit'] = $request->input('per_page') ? : $filters['limit'];
 
         $page = $request->input('page') ?: 1;
         $filters['offset'] = ($page - 1) * $filters['limit'];
 
-        return $filters;
+        $this->filters = $filters;
+
+        return $this;
+    }
+
+    public function fetch()
+    {
+        $results = DataSource::limit($this->filters['limit'])->offset($this->filters['offset']);
+
+        // TODO: title, description, owner
+
+        $this->results = $results->get();
+        return $this;
+    }
+
+    public function getResults()
+    {
+        return $this->results;
+    }
+
+    public function find($id)
+    {
+        return DataSource::find($id) ?: null;
     }
 }
