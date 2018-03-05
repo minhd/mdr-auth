@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use Illuminate\Support\Facades\DB;
 use MinhD\Role;
@@ -9,7 +9,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class UserRoleTest extends TestCase
+class RoleTest extends TestCase
 {
     use RefreshDatabase;
 
