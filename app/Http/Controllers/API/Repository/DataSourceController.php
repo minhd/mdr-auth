@@ -72,7 +72,7 @@ class DataSourceController extends Controller
             'limit' => 10,
             'offset' => 0
         ];
-        $filters['limit'] = $request->input('per_page') ? : $filters['limit'];
+        $filters['limit'] = $request->input('per_page') ?: $filters['limit'];
         $page = $request->input('page') ?: 1;
         $filters['offset'] = ($page - 1) * $filters['limit'];
 
@@ -89,7 +89,7 @@ class DataSourceController extends Controller
     {
         $data = array_merge(
             $request->all(),
-            [ 'user_id' => auth()->user() ]
+            ['user_id' => auth()->user()]
         );
 
         $dataSource = DataSource::create($data);
@@ -100,7 +100,7 @@ class DataSourceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \MinhD\Repository\DataSource  $dataSource
+     * @param  \MinhD\Repository\DataSource $dataSource
      * @return \Illuminate\Http\Response
      */
     public function show(DataSource $dataSource)
@@ -124,7 +124,7 @@ class DataSourceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \MinhD\Repository\DataSource  $dataSource
+     * @param  \MinhD\Repository\DataSource $dataSource
      * @return \Illuminate\Http\Response
      */
     public function destroy(DataSource $dataSource)
