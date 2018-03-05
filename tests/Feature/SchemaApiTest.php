@@ -30,7 +30,14 @@ class SchemaApiTest extends TestCase
         $result->assertJsonCount(20);
     }
 
-    // TODO: it shows single schema
+    /** @test */
+    function a_single_schema()
+    {
+        $schema = factory(Schema::class)->create();
+        $this->getJson(route('schemas.show', ['schema' => $schema->id]))
+            ->assertStatus(200)
+            ->assertSee($schema->title);
+    }
 
     /** @test */
     function it_blocks_the_right_route()
@@ -68,7 +75,6 @@ class SchemaApiTest extends TestCase
         $user = factory(User::class)->create();
         $user->addRole('admin');
         Passport::actingAs($user);
-        // TODO: superuser
 
         $result = $this->postJson(route('schemas.store'), []);
         $result->assertStatus(422);
@@ -117,7 +123,7 @@ class SchemaApiTest extends TestCase
         $user->addRole('admin');
         Passport::actingAs($user);
 
-        $this->deleteJson(route('schemas.destroy', ['schema'=>$schema->id]))
+        $this->deleteJson(route('schemas.destroy', ['schema' => $schema->id]))
             ->assertStatus(202);
 
         $this->assertNull(Schema::find($schema->id));

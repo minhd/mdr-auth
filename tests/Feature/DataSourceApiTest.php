@@ -21,7 +21,14 @@ class DataSourceApiTest extends TestCase
         $result->assertJsonCount(10);
     }
 
-    // TODO: it shows single data source
+    /** @test */
+    function it_shows_a_single_datasource()
+    {
+        $dataSource = factory(DataSource::class)->create();
+        $this->getJson(route('datasources.show', ['datasource' => $dataSource->id]))
+            ->assertStatus(200)
+            ->assertSee($dataSource->id);
+    }
 
     /** @test */
     function it_shows_link_pagination_on_header()
@@ -123,7 +130,7 @@ class DataSourceApiTest extends TestCase
         $dataSource = factory(DataSource::class)->create();
         Passport::actingAs($dataSource->owner);
 
-        $this->deleteJson(route('datasources.destroy', ['datasource'=>$dataSource->id]))
+        $this->deleteJson(route('datasources.destroy', ['datasource' => $dataSource->id]))
             ->assertStatus(202);
 
         $this->assertNull(DataSource::find($dataSource->id));
