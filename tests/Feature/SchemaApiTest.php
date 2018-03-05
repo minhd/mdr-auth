@@ -55,9 +55,7 @@ class SchemaApiTest extends TestCase
     /** @test */
     function it_creates_schema()
     {
-        $user = factory(User::class)->create();
-        $user->addRole('admin');
-        Passport::actingAs($user);
+        signInAdmin();
 
         $result = $this->postJson(route('schemas.store'), [
             'title' => 'A sample schema',
