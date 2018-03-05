@@ -14,7 +14,7 @@ class SchemaTest extends TestCase
     /** @test */
     function a_schema_can_add_versions()
     {
-        $schema = factory(Schema::class)->create();
+        $schema = create(Schema::class);
         $schema->versions()->create([
             'title' => 'a sample version',
             'data' => 'some data',
@@ -26,7 +26,7 @@ class SchemaTest extends TestCase
     /** @test */
     function a_schema_can_get_current_version()
     {
-        $schema = factory(Schema::class)->create();
+        $schema = create(Schema::class);
 
         $schema->versions()->create([
             'title' => 'v1',

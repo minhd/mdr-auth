@@ -16,9 +16,10 @@ class RoleTest extends TestCase
     /** @test */
     function it_can_has_a_role()
     {
-        $user = factory(User::class)->create();
-        $role = factory(Role::class)->create();
+        $user = create(User::class);
+        $role = create(Role::class);
         $user->roles()->save($role);
+
         $this->assertEquals(1, count($user->fresh()->roles));
         $this->assertEquals($role->id, $user->fresh()->roles->first()->id);
     }
@@ -26,32 +27,34 @@ class RoleTest extends TestCase
     /** @test */
     function a_role_can_has_user()
     {
-        $user = factory(User::class)->create();
-        $role = factory(Role::class)->create();
+        $user = create(User::class);
+        $role = create(Role::class);
         $role->users()->save($user);
-        $role->save();
+
         $this->assertEquals(1, count($user->roles));
     }
 
     /** @test */
     function it_can_have_many_roles()
     {
-        $user = factory(User::class)->create();
+        $user = create(User::class);
         for ($i = 0; $i < 10; $i++) {
-            $role = factory(Role::class)->create();
+            $role = create(Role::class);
             $user->roles()->save($role);
         }
+
         $this->assertEquals(10, count($user->roles));
     }
 
     /** @test */
     function it_allows_user_to_have_role()
     {
-        $user = factory(User::class)->create();
+        $user = create(User::class);
         $role1 = Role::create(['name' => 'role1']);
         $role2 = Role::create(['name' => 'role2']);
         $user->roles()->save($role1);
         $user->roles()->save($role2);
+
         $this->assertTrue($user->hasRole('role1'));
         $this->assertTrue($user->hasRole('role2'));
         $this->assertFalse($user->hasRole('role3'));

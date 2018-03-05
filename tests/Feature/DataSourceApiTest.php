@@ -15,7 +15,7 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_shows_some_datasources()
     {
-        factory(DataSource::class, 20)->create();
+        create(DataSource::class, 20);
         $result = $this->getJson(route('datasources.index'));
         $result->assertStatus(200);
         $result->assertJsonCount(10);
@@ -24,7 +24,7 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_shows_a_single_datasource()
     {
-        $dataSource = factory(DataSource::class)->create();
+        $dataSource = create(DataSource::class);
         $this->getJson(route('datasources.show', ['datasource' => $dataSource->id]))
             ->assertStatus(200)
             ->assertSee($dataSource->id);
@@ -33,7 +33,7 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_shows_link_pagination_on_header()
     {
-        factory(DataSource::class, 30)->create();
+        create(DataSource::class, 30);
 
         // GET /
         $result = $this->getJson(route('datasources.index'));
@@ -49,7 +49,7 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_shows_previous_link_on_page_2()
     {
-        factory(DataSource::class, 30)->create();
+        create(DataSource::class, 30);
 
         $result = $this->getJson(route('datasources.index') . "?page=2");
         $result->assertHeader('Link');
@@ -72,8 +72,7 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_creates_datasource()
     {
-        $user = factory(User::class)->create();
-        Passport::actingAs($user);
+        signIn();
 
         $result = $this->postJson(route('datasources.store'), [
             'title' => 'A sample data source',
@@ -86,8 +85,7 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_validates_datasource_creation()
     {
-        $user = factory(User::class)->create();
-        Passport::actingAs($user);
+        signIn();
 
         $result = $this->postJson(route('datasources.store'), []);
         $result->assertStatus(422);
@@ -98,8 +96,8 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_update_datasource()
     {
-        $dataSource = factory(DataSource::class)->create();
-        Passport::actingAs($dataSource->owner);
+        $dataSource = create(DataSource::class);
+        signIn($dataSource->owner);
 
         $result = $this->putJson(route('datasources.update', ['datasource' => $dataSource->id]), [
             'title' => 'title changed',
@@ -113,8 +111,8 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_disallow_updating_datasource_you_dont_own()
     {
-        $dataSource = factory(DataSource::class)->create();
-        $notOwner = factory(User::class)->create();
+        $dataSource = create(DataSource::class);
+        $notOwner = signIn();
         Passport::actingAs($notOwner);
 
         $result = $this->putJson(route('datasources.update', ['datasource' => $dataSource->id]), [
@@ -127,8 +125,8 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_can_delete_datasource()
     {
-        $dataSource = factory(DataSource::class)->create();
-        Passport::actingAs($dataSource->owner);
+        $dataSource = create(DataSource::class);
+        signIn($dataSource->owner);
 
         $this->deleteJson(route('datasources.destroy', ['datasource' => $dataSource->id]))
             ->assertStatus(202);

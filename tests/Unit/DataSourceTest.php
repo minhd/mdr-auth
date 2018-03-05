@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use MinhD\Repository\DataSource;
 use MinhD\User;
@@ -14,7 +14,8 @@ class DataSourceTest extends TestCase
     /** @test */
     function datasource_must_have_an_owner()
     {
-        $dataSource = factory(DataSource::class)->create();
+        $dataSource = create(DataSource::class);
+
         $this->assertNotNull($dataSource->owner);
         $this->assertEquals(get_class($dataSource->owner), User::class);
     }

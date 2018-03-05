@@ -15,6 +15,7 @@ class UserApiTest extends TestCase
     function it_blocks_anonymous()
     {
         $response = $this->getJson('/api/user');
+
         $response->assertStatus(401);
         $response->assertSee("Unauthenticated");
     }
@@ -22,11 +23,16 @@ class UserApiTest extends TestCase
     /** @test */
     function it_shows_currently_logged_in_users()
     {
-        $user = factory(User::class)->create();
-        Passport::actingAs($user);
+        $user = signIn();
 
         $response = $this->getJson('/api/user');
         $response->assertStatus(201);
         $response->assertSee($user->name);
+    }
+
+    /** @test */
+    function it_redirects_user_if_not_logged_in()
+    {
+        $this->get('/api/user')->assertStatus(302);
     }
 }

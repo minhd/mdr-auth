@@ -33,7 +33,7 @@ class SchemaApiTest extends TestCase
     /** @test */
     function a_single_schema()
     {
-        $schema = factory(Schema::class)->create();
+        $schema = create(Schema::class);
         $this->getJson(route('schemas.show', ['schema' => $schema->id]))
             ->assertStatus(200)
             ->assertSee($schema->title);
@@ -85,7 +85,7 @@ class SchemaApiTest extends TestCase
     /** @test */
     function it_updates_schema()
     {
-        $schema = factory(Schema::class)->create();
+        $schema = create(Schema::class);
 
         $user = factory(User::class)->create();
         $user->addRole('admin');
@@ -103,10 +103,8 @@ class SchemaApiTest extends TestCase
     /** @test */
     function it_disallow_updating_schema_without_superuser()
     {
-        $schema = factory(Schema::class)->create();
-
-        $user = factory(User::class)->create();
-        Passport::actingAs($user);
+        $schema = create(Schema::class);
+        signIn();
 
         $result = $this->putJson(route('schemas.update', ['schema' => $schema->id]), [
             'title' => 'title changed',
@@ -118,10 +116,8 @@ class SchemaApiTest extends TestCase
     /** @test */
     function it_deletes_schema()
     {
-        $schema = factory(Schema::class)->create();
-        $user = factory(User::class)->create();
-        $user->addRole('admin');
-        Passport::actingAs($user);
+        $schema = create(Schema::class);
+        signInAdmin();
 
         $this->deleteJson(route('schemas.destroy', ['schema' => $schema->id]))
             ->assertStatus(202);
