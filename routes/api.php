@@ -33,5 +33,13 @@ Route::group(['namespace' => 'API\Repository'], function() {
             ->middleware(['auth:api', 'role:admin']);
         Route::get('schemas', 'SchemaController@index')->name('schemas.index');
         Route::get('schemas/{schema}', 'SchemaController@show')->name('schemas.show');
+
+        Route::group(['except'=>['edit', 'create']], function() {
+            Route::bind('version', function($value) {
+                return \MinhD\Repository\SchemaVersion::find($value) ?? abort(404);
+            });
+            Route::resource('schemas.versions', 'SchemaVersionController');
+        });
+
     });
 });

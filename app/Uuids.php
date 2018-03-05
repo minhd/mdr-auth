@@ -3,7 +3,6 @@
 
 namespace MinhD;
 
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Uuid as Generator;
 
 trait Uuids
