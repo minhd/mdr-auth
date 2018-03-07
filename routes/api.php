@@ -28,6 +28,10 @@ Route::group(['namespace' => 'API\Repository'], function () {
         Route::resource('datasources', 'DataSourceController',
             ['except' => ['edit', 'create']])->middleware('auth:api');
 
+        Route::resource('records', 'RecordController', ['except' => ['edit', 'create']])->middleware('auth:api');
+        Route::get('records', 'RecordController@index')->name('records.index');
+        Route::get('records/{record}', 'RecordController@show')->name('records.show');
+
         Route::group([
             'except' => ['edit', 'create'],
             'middleware' => ['auth:api', 'role:admin']

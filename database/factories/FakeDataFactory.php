@@ -46,3 +46,11 @@ $factory->define(\MinhD\Repository\Schema::class, function(Faker $faker){
         'shortcode' => str_slug($name)
     ];
 });
+
+$factory->define(\MinhD\Repository\Record::class, function (Faker $faker){
+    return [
+        'title' => $faker->name,
+        'status' => \MinhD\Repository\Record::STATUS_PUBLISHED,
+        'data_source_id' => factory(MinhD\Repository\DataSource::class)->create()->id
+    ];
+});

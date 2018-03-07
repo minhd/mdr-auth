@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSchemaVersionsTable extends Migration
+class CreateRecordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateSchemaVersionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('schema_versions', function (Blueprint $table) {
+        Schema::create('records', function (Blueprint $table) {
             $table->uuid('id');
             $table->primary('id');
             $table->string('title');
             $table->string('status');
-            $table->longText('data');
-            $table->integer('schema_id');
-            // $table->foreign('schema_id')->references('id')->on('schemas');
+            $table->uuid('data_source_id');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ class CreateSchemaVersionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('schema_versions');
+        Schema::dropIfExists('records');
     }
 }
