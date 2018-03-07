@@ -22,6 +22,8 @@ class SchemaVersionApiTest extends TestCase
     /** @test */
     function it_shows_some_schema_versions()
     {
+        signInAdmin();
+
         $schema = create(Schema::class);
         for ($i = 1; $i < 6; $i++) {
             $schema->versions()->create([
@@ -38,6 +40,8 @@ class SchemaVersionApiTest extends TestCase
     /** @test */
     function it_shows_a_single_version_via_schema_route()
     {
+        signInAdmin();
+
         $schema = create(Schema::class);
         $schema->versions()->create([
             'title' => 'a sample version',

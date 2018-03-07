@@ -40,10 +40,6 @@ Route::group(['namespace' => 'API\Repository'], function () {
             });
             Route::resource('schemas.versions', 'SchemaVersionController');
         });
-        Route::get('schemas/{schema}/versions', 'SchemaVersionController@index')
-            ->name('schemas.versions.index');
-        Route::get('schemas/{schema}/versions/{version}', 'SchemaVersionController@show')
-            ->name('schemas.versions.show');
 
     });
 });
