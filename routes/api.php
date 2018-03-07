@@ -30,8 +30,6 @@ Route::group(['namespace' => 'API\Repository'], function () {
 
         Route::resource('schemas', 'SchemaController', ['except' => ['edit', 'create']])
             ->middleware(['auth:api', 'role:admin']);
-        Route::get('schemas', 'SchemaController@index')->name('schemas.index');
-        Route::get('schemas/{schema}', 'SchemaController@show')->name('schemas.show');
 
         Route::group([
             'except' => ['edit', 'create'],

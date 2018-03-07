@@ -24,6 +24,8 @@ class SchemaApiTest extends TestCase
     /** @test */
     function it_shows_schemas()
     {
+        signInAdmin();
+
         factory(Schema::class, 20)->create();
         $result = $this->getJson(route('schemas.index'));
         $result->assertStatus(200);
@@ -33,6 +35,8 @@ class SchemaApiTest extends TestCase
     /** @test */
     function a_single_schema()
     {
+        signInAdmin();
+
         $schema = create(Schema::class);
         $this->getJson(route('schemas.show', ['schema' => $schema->id]))
             ->assertStatus(200)

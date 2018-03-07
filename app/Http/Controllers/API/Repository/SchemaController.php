@@ -52,7 +52,6 @@ class SchemaController extends Controller
      */
     public function update(StoreSchema $request, Schema $schema)
     {
-        $this->middleware('role.admin');
         $schema->update($request->all());
         return response($schema, Response::HTTP_ACCEPTED);
     }
