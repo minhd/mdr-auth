@@ -27,8 +27,6 @@ Route::group(['namespace' => 'API\Repository'], function () {
 
         Route::resource('datasources', 'DataSourceController',
             ['except' => ['edit', 'create']])->middleware('auth:api');
-        Route::get('datasources', 'DataSourceController@index')->name('datasources.index');
-        Route::get('datasources/{datasource}', 'DataSourceController@show')->name('datasources.show');
 
         Route::resource('schemas', 'SchemaController', ['except' => ['edit', 'create']])
             ->middleware(['auth:api', 'role:admin']);

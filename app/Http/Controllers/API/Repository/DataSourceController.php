@@ -23,6 +23,7 @@ class DataSourceController extends Controller
         $filters = $this->getFilters($request);
 
         $paginator = (new DataSource())
+            ->where('user_id', auth()->user()->id)
             ->offset($filters['offset'])
             ->paginate($filters['limit']);
 
@@ -105,6 +106,10 @@ class DataSourceController extends Controller
      */
     public function show(DataSource $dataSource)
     {
+        if ($dataSource->user_id !== auth()->user()->id) {
+            return response("", Response::HTTP_FORBIDDEN);
+        }
+
         return response($dataSource, Response::HTTP_OK);
     }
 

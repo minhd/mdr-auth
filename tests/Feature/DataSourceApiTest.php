@@ -15,16 +15,38 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_shows_some_datasources()
     {
-        create(DataSource::class, 20);
+        $user = create(User::class);
+        create(DataSource::class, 20, ['user_id' => $user->id]);
+        signIn($user);
+
         $result = $this->getJson(route('datasources.index'));
         $result->assertStatus(200);
         $result->assertJsonCount(10);
     }
 
     /** @test */
+    function only_datasource_owned_can_be_listed()
+    {
+        $user = create(User::class);
+        $dataSource1 = create(DataSource::class, 1, ['user_id' => $user->id]);
+        $anotherUser = create(User::class);
+        $dataSource2 = create(DataSource::class, 1, ['user_id' => $anotherUser->id]);
+        signIn($user);
+
+        $this->getJson(route('datasources.index'))
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertSee($dataSource1->title)
+            ->assertDontSee($dataSource2->title);
+    }
+
+    /** @test */
     function it_shows_a_single_datasource()
     {
-        $dataSource = create(DataSource::class);
+        $user = create(User::class);
+        $dataSource = create(DataSource::class, 1, ['user_id' => $user->id]);
+        signIn($user);
+
         $this->getJson(route('datasources.show', ['datasource' => $dataSource->id]))
             ->assertStatus(200)
             ->assertSee($dataSource->id);
@@ -33,7 +55,9 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_shows_link_pagination_on_header()
     {
-        create(DataSource::class, 30);
+        $user = create(User::class);
+        create(DataSource::class, 30, ['user_id' => $user->id]);
+        signIn($user);
 
         // GET /
         $result = $this->getJson(route('datasources.index'));
@@ -49,7 +73,9 @@ class DataSourceApiTest extends TestCase
     /** @test */
     function it_shows_previous_link_on_page_2()
     {
-        create(DataSource::class, 30);
+        $user = create(User::class);
+        create(DataSource::class, 30, ['user_id' => $user->id]);
+        signIn($user);
 
         $result = $this->getJson(route('datasources.index') . "?page=2");
         $result->assertHeader('Link');
