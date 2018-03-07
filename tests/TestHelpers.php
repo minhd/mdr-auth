@@ -1,6 +1,6 @@
 <?php
 
-function create($class, $count = 1, $attributes = [])
+function create($class, int $count = 1, array $attributes = [])
 {
     if ($count === 1) {
         return factory($class)->create($attributes);
