@@ -20,64 +20,17 @@ class DataSourceController extends Controller
      */
     public function index(Request $request)
     {
-        $filters = $this->getFilters($request);
+        $filters = getPaginationFilters($request);
 
         $paginator = (new DataSource())
             ->where('user_id', auth()->user()->id)
             ->offset($filters['offset'])
             ->paginate($filters['limit']);
 
-        $links = $this->getLinksHeader($paginator);
+        $links = getPaginatedLinksForHeader($paginator);
 
         return response($paginator->items(), Response::HTTP_OK)
             ->header('Link', $links);
-    }
-
-    /**
-     * get Link formatted for use in HTTP Header
-     *
-     * @param LengthAwarePaginator $paginator
-     * @return array|string
-     */
-    private function getLinksHeader(LengthAwarePaginator $paginator)
-    {
-        $pagination = $paginator->toArray();
-        $links = [];
-
-        if ($pagination['prev_page_url']) {
-            $prev = "<{$pagination['prev_page_url']}>; rel=\"prev\"";
-            $links[] = $prev;
-        }
-
-        if ($paginator->hasMorePages()) {
-            $links[] = "<{$pagination['next_page_url']}>; rel=\"next\"";
-        }
-
-        $links[] = "<{$pagination['first_page_url']}>; rel=\"first\"";
-        $links[] = "<{$pagination['last_page_url']}>; rel=\"last\"";
-
-        $links = implode(", ", $links);
-
-        return $links;
-    }
-
-    /**
-     * Get an array of valid filters
-     *
-     * @param Request $request
-     * @return array
-     */
-    private function getFilters(Request $request)
-    {
-        $filters = [
-            'limit' => 10,
-            'offset' => 0
-        ];
-        $filters['limit'] = $request->input('per_page') ?: $filters['limit'];
-        $page = $request->input('page') ?: 1;
-        $filters['offset'] = ($page - 1) * $filters['limit'];
-
-        return $filters;
     }
 
     /**
