@@ -28,9 +28,6 @@ Route::group(['namespace' => 'API\Repository'], function () {
         Route::resource('datasources', 'DataSourceController',
             ['except' => ['edit', 'create']])->middleware('auth:api');
 
-        Route::resource('schemas', 'SchemaController', ['except' => ['edit', 'create']])
-            ->middleware(['auth:api', 'role:admin']);
-
         Route::group([
             'except' => ['edit', 'create'],
             'middleware' => ['auth:api', 'role:admin']
@@ -38,6 +35,7 @@ Route::group(['namespace' => 'API\Repository'], function () {
             Route::bind('version', function ($value) {
                 return \MinhD\Repository\SchemaVersion::find($value) ?? abort(404);
             });
+            Route::resource('schemas', 'SchemaController');
             Route::resource('schemas.versions', 'SchemaVersionController');
         });
 
