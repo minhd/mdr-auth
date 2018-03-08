@@ -32,7 +32,7 @@ class SchemaVersionApiTest extends TestCase
                 'status' => SchemaVersion::SUPERSEDED
             ]);
         }
-        $this->getJson(route('schemas.versions.index', ['schema' => $schema->id]))
+        $this->getJson(route('schemas.schemaversions.index', ['schema' => $schema->id]))
             ->assertStatus(200)
             ->assertJsonCount(5);
     }
@@ -50,22 +50,9 @@ class SchemaVersionApiTest extends TestCase
         ]);
         $version = $schema->currentVersion;
 
-        $this->getJson(route('schemas.versions.show', ['schema' => $schema->id, 'version' => $version->id]))
+        $this->getJson(route('schemas.schemaversions.show', ['schema' => $schema->id, 'schemaversion' => $version->id]))
             ->assertStatus(200)
             ->assertSee('a sample version');
-    }
-
-    /** @test */
-    function it_disallows_the_right_route()
-    {
-        $this->postJson(route('schemas.versions.store', ['schema' => 1]))
-            ->assertStatus(401)->assertSee('Unauthenticated');
-
-        $this->putJson(route('schemas.versions.update', ['schema' => 1, 'version' => 1]), [])
-            ->assertStatus(401)->assertSee('Unauthenticated');
-
-        $this->deleteJson(route('schemas.versions.destroy', ['schema' => 1, 'version' => 1]), [])
-            ->assertStatus(401)->assertSee('Unauthenticated');
     }
 
     /** @test */
@@ -74,7 +61,7 @@ class SchemaVersionApiTest extends TestCase
         signInAdmin();
 
         $schema = create(Schema::class);
-        $result = $this->postJson(route('schemas.versions.store', ['schema' => $schema->id]), [
+        $result = $this->postJson(route('schemas.schemaversions.store', ['schema' => $schema->id]), [
             'title' => 'a sample version',
             'status' => 'current',
             'data' => 'some data'
@@ -96,12 +83,14 @@ class SchemaVersionApiTest extends TestCase
             'schema_id' => $schema
         ]);
 
-        $result = $this->putJson(route('schemas.versions.update', ['schema' => $schema->id, 'version' => $version->id]),
-            [
-                'title' => 'v2',
-                'status' => 'current',
-                'data' => 'some data'
-            ]);
+        $result = $this->putJson(route('schemas.schemaversions.update', [
+            'schema' => $schema->id,
+            'schemaversion' => $version->id
+        ]), [
+            'title' => 'v2',
+            'status' => 'current',
+            'data' => 'some data'
+        ]);
 
         $result->assertStatus(202);
         $result->assertSee("v2");
@@ -113,7 +102,7 @@ class SchemaVersionApiTest extends TestCase
         signInAdmin();
 
         $schema = create(Schema::class);
-        $result = $this->postJson(route('schemas.versions.store', ['schema' => $schema->id]), [
+        $result = $this->postJson(route('schemas.schemaversions.store', ['schema' => $schema->id]), [
             'title' => 'a sample version',
             'data' => 'some data'
         ]);
@@ -133,7 +122,7 @@ class SchemaVersionApiTest extends TestCase
             'schema_id' => $schema
         ]);
 
-        $this->deleteJson(route('schemas.versions.destroy', ['schema' => $schema->id, 'version' => $version->id]))
+        $this->deleteJson(route('schemas.schemaversions.destroy', ['schema' => $schema->id, 'version' => $version->id]))
             ->assertStatus(202);
     }
 

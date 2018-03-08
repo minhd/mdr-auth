@@ -32,16 +32,19 @@ Route::group(['namespace' => 'API\Repository'], function () {
         Route::get('records', 'RecordController@index')->name('records.index');
         Route::get('records/{record}', 'RecordController@show')->name('records.show');
 
-        Route::group([
-            'except' => ['edit', 'create'],
-            'middleware' => ['auth:api', 'role:admin']
-        ], function () {
-            Route::bind('version', function ($value) {
-                return \MinhD\Repository\SchemaVersion::find($value) ?? abort(404);
-            });
-            Route::resource('schemas', 'SchemaController');
-            Route::resource('schemas.versions', 'SchemaVersionController');
-        });
+        Route::resource('records.recordsversions', 'RecordVersionController', [
+            'except' => ['edit', 'create']
+        ]);
+
+        Route::resource('schemas', 'SchemaController', [
+            'except' => ['edit', 'create']
+        ])->middleware(['auth:api', 'role:admin']);
+        Route::resource('schemas.schemaversions', 'SchemaVersionController', [
+            'except' => ['edit', 'create']
+        ]);
+
+        Route::model('schemaversion', \MinhD\Repository\SchemaVersion::class);
+        Route::model('recordversion', \MinhD\Repository\RecordVersion::class);
 
     });
 });

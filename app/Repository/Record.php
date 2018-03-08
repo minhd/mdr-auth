@@ -21,4 +21,9 @@ class Record extends Model
     {
         return $this->belongsTo(DataSource::class, 'data_source_id');
     }
+
+    public function versions()
+    {
+        return $this->hasMany(RecordVersion::class);
+    }
 }
