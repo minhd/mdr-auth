@@ -79,7 +79,8 @@ class RecordController extends Controller
      */
     public function update(Request $request, Record $record)
     {
-        //
+        $record->update($request->all());
+        return response($record, Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -90,6 +91,7 @@ class RecordController extends Controller
      */
     public function destroy(Record $record)
     {
-        //
+        $record->delete();
+        return response("", Response::HTTP_ACCEPTED);
     }
 }

@@ -108,7 +108,14 @@ class RecordsApiTest extends TestCase
     /** @test */
     function it_updates_records()
     {
-        // TODO
+        signIn();
+        $record = create(Record::class);
+
+        $this->putJson(route('records.update', [
+            'record' => $record->id,
+            'title' => 'updated title',
+            'status' => Record::STATUS_DRAFT
+        ]))->assertStatus(202)->assertSee('updated title');
     }
 
     /** @test */
@@ -120,6 +127,13 @@ class RecordsApiTest extends TestCase
     /** @test */
     function it_can_delete_records()
     {
-        // TODO
+        signIn();
+        $record = create(Record::class);
+
+        $this->deleteJson(route('records.destroy', [
+            'record' => $record->id
+        ]))->assertStatus(202);
+
+        $this->assertNull(Record::find($record->id));
     }
 }
