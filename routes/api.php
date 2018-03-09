@@ -21,28 +21,18 @@ Route::group(['namespace' => 'API\Repository'], function () {
     Route::get('repository', 'RepositoryController@index');
     Route::group(['prefix' => 'repository'], function () {
 
-        Route::bind('datasource', function ($value) {
-            return \MinhD\Repository\DataSource::find($value) ?? abort(404);
-        });
+        Route::apiResource('datasources', 'DataSourceController')->middleware('auth:api');
 
-        Route::resource('datasources', 'DataSourceController',
-            ['except' => ['edit', 'create']])->middleware('auth:api');
-
-        Route::resource('records', 'RecordController', ['except' => ['edit', 'create']])->middleware('auth:api');
+        Route::apiResource('records', 'RecordController')->middleware('auth:api');
         Route::get('records', 'RecordController@index')->name('records.index');
         Route::get('records/{record}', 'RecordController@show')->name('records.show');
 
-        Route::resource('records.recordsversions', 'RecordVersionController', [
-            'except' => ['edit', 'create']
-        ]);
+        Route::apiResource('records.recordsversions', 'RecordVersionController');
 
-        Route::resource('schemas', 'SchemaController', [
-            'except' => ['edit', 'create']
-        ])->middleware(['auth:api', 'role:admin']);
-        Route::resource('schemas.schemaversions', 'SchemaVersionController', [
-            'except' => ['edit', 'create']
-        ]);
+        Route::apiResource('schemas', 'SchemaController')->middleware(['auth:api', 'role:admin']);
+        Route::apiResource('schemas.schemaversions', 'SchemaVersionController');
 
+        Route::model('datasource', MinhD\Repository\Datasource::class);
         Route::model('schemaversion', \MinhD\Repository\SchemaVersion::class);
         Route::model('recordversion', \MinhD\Repository\RecordVersion::class);
 
