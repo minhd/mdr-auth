@@ -29,12 +29,8 @@ Route::group(['namespace' => 'API\Repository'], function () {
 
         Route::apiResource('records.recordsversions', 'RecordVersionController');
 
-        Route::apiResource('schemas', 'SchemaController')->middleware(['auth:api', 'role:admin']);
-        Route::apiResource('schemas.schemaversions', 'SchemaVersionController');
-
         Route::model('datasource', MinhD\Repository\Datasource::class);
-        Route::model('schemaversion', \MinhD\Repository\SchemaVersion::class);
-        Route::model('recordversion', \MinhD\Repository\RecordVersion::class);
 
+        Route::model('recordversion', \MinhD\Repository\RecordVersion::class);
     });
 });
