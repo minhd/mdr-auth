@@ -13,7 +13,8 @@ class RepositoryController extends Controller
         return [
             'url' => URL::to('/'),
             'api_url' => URL::to('/api'),
-            'version' => '0.1a'
+            'version' => '0.1a',
+            'schemas' => collect(config('schema'))->keys()
         ];
     }
 }

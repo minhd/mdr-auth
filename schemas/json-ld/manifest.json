@@ -1,0 +1,8 @@
+{
+    "title": "Schema for JSON-LD",
+    "slug": "json-ld",
+    "version": "1.0",
+    "format": "json",
+    "type": "json-schema",
+    "entry" : "jsonld-schema.json"
+}
