@@ -2,35 +2,38 @@
 
 namespace MinhD\Repository;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Schema extends Model
+class Schema
 {
-    public $fillable = ['title', 'description', 'shortcode', 'url'];
+    public $title;
+    public $content;
+    public $manifest;
+    private $validator;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Schema constructor.
      */
-    public function versions()
+    public function __construct($manifest)
     {
-        return $this->hasMany(SchemaVersion::class);
+        $this->manifest = $manifest;
+        $this->init();
     }
 
-    /**
-     * @return SchemaVersion
-     */
-    public function currentVersion()
+    public function init()
     {
-        return $this->versions->filter(function(SchemaVersion $version){
-            return $version->status === SchemaVersion::CURRENT;
-        })->first();
+        $slug = $this->manifest['slug'];
+        $config = config("schema.$slug");
+        $this->title = $this->manifest['title'];
+        $this->content = (new SchemaRepository())->getContent($this);
+        $this->validator = $config['validator'] ? new $config['validator']() : null;
     }
 
-    /**
-     * @return SchemaVersion
-     */
-    public function getCurrentVersionAttribute()
+    public function validate($payload)
     {
-        return $this->currentVersion();
+        if ($this->validator) {
+            return $this->validator->validate($payload);
+        }
+
+        return true;
     }
 }

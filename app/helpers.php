@@ -27,7 +27,8 @@ function getPaginationFilters(\Illuminate\Http\Request $request)
  * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator $paginator
  * @return array|string
  */
-function getPaginatedLinksForHeader(\Illuminate\Contracts\Pagination\LengthAwarePaginator $paginator) {
+function getPaginatedLinksForHeader(\Illuminate\Contracts\Pagination\LengthAwarePaginator $paginator)
+{
     $pagination = $paginator->toArray();
     $links = [];
 
@@ -46,4 +47,11 @@ function getPaginatedLinksForHeader(\Illuminate\Contracts\Pagination\LengthAware
     $links = implode(", ", $links);
 
     return $links;
+}
+
+if (!function_exists('base_path')) {
+    function schema_path($path)
+    {
+        return base_path('schemas') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+    }
 }
