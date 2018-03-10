@@ -19,6 +19,7 @@ class CreateDataSourcesTable extends Migration
             $table->uuid('user_id');
             $table->string('title');
             $table->mediumText('description')->nullable();
+            $table->json('meta')->nullable();
             $table->timestamps();
         });
     }

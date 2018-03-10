@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use MinhD\Repository\DataSource;
 use MinhD\User;
 use Tests\TestCase;

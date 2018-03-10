@@ -104,6 +104,7 @@ class DataSourceApiTest extends TestCase
             'title' => 'A sample data source',
             'description' => 'something'
         ]);
+
         $result->assertStatus(201);
         $result->assertSee("A sample data source");
     }

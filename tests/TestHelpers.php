@@ -13,7 +13,8 @@ function create($class, int $count = 1, array $attributes = [])
     return true;
 }
 
-function signIn($user = null) {
+function signIn($user = null)
+{
     if ($user === null) {
         $user = factory(MinhD\User::class)->create();
     }
@@ -21,7 +22,8 @@ function signIn($user = null) {
     return $user;
 }
 
-function signInAdmin() {
+function signInAdmin()
+{
     $user = factory(MinhD\User::class)->create();
     $user->addRole('admin');
     Laravel\Passport\Passport::actingAs($user);

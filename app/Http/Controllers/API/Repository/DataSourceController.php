@@ -43,7 +43,7 @@ class DataSourceController extends Controller
     {
         $data = array_merge(
             $request->all(),
-            ['user_id' => auth()->user()]
+            ['user_id' => auth()->user()->id]
         );
 
         $dataSource = DataSource::create($data);

@@ -14,6 +14,10 @@ class DataSource extends Model
 
     public $fillable = ['title', 'description', 'user_id'];
 
+    protected $casts = [
+        'meta' => 'array'
+    ];
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
