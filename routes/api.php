@@ -27,10 +27,8 @@ Route::group(['namespace' => 'API\Repository'], function () {
         Route::get('records', 'RecordController@index')->name('records.index');
         Route::get('records/{record}', 'RecordController@show')->name('records.show');
 
-        Route::apiResource('records.recordsversions', 'RecordVersionController');
+        Route::apiResource('records.versions', 'RecordVersionController');
 
         Route::model('datasource', MinhD\Repository\Datasource::class);
-
-        Route::model('recordversion', \MinhD\Repository\RecordVersion::class);
     });
 });

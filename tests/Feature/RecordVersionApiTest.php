@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use MinhD\Repository\Record;
-use MinhD\Repository\RecordVersion;
+use MinhD\Repository\Version;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -16,15 +16,15 @@ class RecordVersionApiTest extends TestCase
     {
         $record = create(Record::class);
         $record->versions()->create([
-            'status' => RecordVersion::STATUS_CURRENT,
+            'status' => Version::STATUS_CURRENT,
             'data' => 'current_ver'
         ]);
         $record->versions()->create([
-            'status' => RecordVersion::STATUS_SUPERSEDED,
+            'status' => Version::STATUS_SUPERSEDED,
             'data' => 'prev_ver'
         ]);
 
-        $this->getJson(route('records.recordsversions.index', [
+        $this->getJson(route('records.versions.index', [
             'record' => $record->id
         ]))->assertStatus(200);
     }

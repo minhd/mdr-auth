@@ -24,6 +24,6 @@ class Record extends Model
 
     public function versions()
     {
-        return $this->hasMany(RecordVersion::class);
+        return $this->hasMany(Version::class);
     }
 }

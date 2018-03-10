@@ -5,7 +5,7 @@ namespace MinhD\Repository;
 use Illuminate\Database\Eloquent\Model;
 use MinhD\Uuids;
 
-class RecordVersion extends Model
+class Version extends Model
 {
     use Uuids;
 

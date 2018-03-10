@@ -3,7 +3,7 @@
 namespace MinhD\Http\Controllers\API\Repository;
 
 use MinhD\Http\Controllers\Controller;
-use MinhD\Repository\RecordVersion;
+use MinhD\Repository\Version;
 use Illuminate\Http\Request;
 
 class RecordVersionController extends Controller
@@ -42,10 +42,10 @@ class RecordVersionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \MinhD\Repository\RecordVersion  $recordVersion
+     * @param  \MinhD\Repository\Version  $recordVersion
      * @return \Illuminate\Http\Response
      */
-    public function show(RecordVersion $recordVersion)
+    public function show(Version $recordVersion)
     {
         //
     }
@@ -53,10 +53,10 @@ class RecordVersionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \MinhD\Repository\RecordVersion  $recordVersion
+     * @param  \MinhD\Repository\Version  $recordVersion
      * @return \Illuminate\Http\Response
      */
-    public function edit(RecordVersion $recordVersion)
+    public function edit(Version $recordVersion)
     {
         //
     }
@@ -65,10 +65,10 @@ class RecordVersionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \MinhD\Repository\RecordVersion  $recordVersion
+     * @param  \MinhD\Repository\Version  $recordVersion
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, RecordVersion $recordVersion)
+    public function update(Request $request, Version $recordVersion)
     {
         //
     }
@@ -76,10 +76,10 @@ class RecordVersionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \MinhD\Repository\RecordVersion  $recordVersion
+     * @param  \MinhD\Repository\Version  $recordVersion
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RecordVersion $recordVersion)
+    public function destroy(Version $recordVersion)
     {
         //
     }

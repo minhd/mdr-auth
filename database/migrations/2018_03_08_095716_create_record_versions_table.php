@@ -13,7 +13,7 @@ class CreateRecordVersionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('record_versions', function (Blueprint $table) {
+        Schema::create('versions', function (Blueprint $table) {
             $table->uuid('id');
             $table->primary('id');
             $table->string('status');
