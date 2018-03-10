@@ -3,84 +3,72 @@
 namespace MinhD\Http\Controllers\API\Repository;
 
 use MinhD\Http\Controllers\Controller;
+use MinhD\Repository\Record;
 use MinhD\Repository\Version;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class RecordVersionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param Record $record
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Record $record)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response($record->versions, Response::HTTP_OK);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     * @param Record $record
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Record $record)
     {
-        //
+        $version = $record->versions()->create($request->all());
+        return response($version, Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \MinhD\Repository\Version  $recordVersion
+     * @param Record $record
+     * @param Version $version
      * @return \Illuminate\Http\Response
      */
-    public function show(Version $recordVersion)
+    public function show(Record $record, Version $version)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \MinhD\Repository\Version  $recordVersion
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Version $recordVersion)
-    {
-        //
+        return response($version, Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \MinhD\Repository\Version  $recordVersion
+     * @param  \Illuminate\Http\Request $request
+     * @param Version $version
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Version $recordVersion)
+    public function update(Request $request, Record $record, Version $version)
     {
-        //
+        $version->update($request->all());
+        return response($version, Response::HTTP_ACCEPTED);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \MinhD\Repository\Version  $recordVersion
+     * @param Record $record
+     * @param Version $version
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Version $recordVersion)
+    public function destroy(Record $record, Version $version)
     {
-        //
+        $version->delete();
+        return response("", Response::HTTP_ACCEPTED);
     }
 }
