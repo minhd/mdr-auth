@@ -6,8 +6,6 @@ use MinhD\Exceptions\SchemaNotFound;
 use MinhD\Repository\Schema;
 use MinhD\Repository\SchemaRepository;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SchemaRepositoryTest extends TestCase
 {

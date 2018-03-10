@@ -3,7 +3,6 @@
 
 namespace MinhD\Repository;
 
-
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,7 +24,6 @@ class SchemaRepository
 
         $schema = new Schema($manifest);
         return $schema;
-
     }
 
     public function getContent(Schema $schema)
