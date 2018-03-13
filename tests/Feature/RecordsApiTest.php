@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use MinhD\Repository\DataSource;
 use MinhD\Repository\Record;
+use MinhD\Repository\Version;
+use MinhD\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -86,43 +88,88 @@ class RecordsApiTest extends TestCase
             ->assertStatus(401)->assertSee('Unauthenticated');
     }
 
+    protected function validRecord($overrides = [], $user = null)
+    {
+        $user = $user ?: signIn();
+        $dataSource = create(DataSource::class, 1, ['user_id' => $user]);
+        return array_merge([
+            'title' => 'some sample record',
+            'status' => Record::STATUS_DRAFT,
+            'data_source_id' => $dataSource->id,
+            'version' => [
+                'status' => Version::STATUS_CURRENT,
+                'data' => 'current_version'
+            ]
+        ], $overrides);
+    }
+
     /** @test */
     function can_create_record()
     {
         signIn();
-        $dataSource = create(DataSource::class);
+        $valid = $this->validRecord();
 
-        $this->postJson(route('records.store', [
-            'title' => 'some sample record',
-            'status' => Record::STATUS_DRAFT,
-            'data_source_id' => $dataSource->id
-        ]))->assertStatus(201)->assertSee('some sample record');
+        $this->postJson(route('records.store', $valid))
+            ->assertStatus(201)->assertSee($valid['title']);
     }
 
     /** @test */
-    function it_validates_record_creation()
+    function it_requires_some_data_to_create()
     {
-        // TODO
+        signIn();
+
+        $this->postJson(route('records.store', []))
+            ->assertStatus(422);
     }
+
+    /** @test */
+    function it_requires_version_to_create()
+    {
+        signIn();
+
+        $this->postJson(route('records.store', $this->validRecord(['version' => ''])))
+            ->assertStatus(422)->assertSee('version field is required');
+    }
+
+    /** @test */
+    function it_requires_a_valid_datasource_to_create()
+    {
+        signIn();
+
+        $this->postJson(route('records.store', $this->validRecord(['data_source_id' => 'non-exist'])))
+            ->assertStatus(422)->assertSee('data source');
+    }
+
 
     /** @test */
     function it_updates_records()
     {
-        signIn();
-        $record = create(Record::class);
+        $user = signIn();
+        $dataSource = create(DataSource::class, 1, ['user_id' => $user->id]);
+        $record = create(Record::class, 1, ['data_source_id' => $dataSource->id]);
 
         $this->putJson(route('records.update', [
             'record' => $record->id,
-            'title' => 'updated title',
-            'status' => Record::STATUS_DRAFT
+            'title' => 'updated title'
         ]))->assertStatus(202)->assertSee('updated title');
     }
 
     /** @test */
     function it_disallows_updating_records_user_dont_own()
     {
-        // TODO
+        $john = signIn();
+        $dataSource = create(DataSource::class, 1, ['user_id' => $john->id]);
+        $record = create(Record::class, 1, ['data_source_id' => $dataSource->id]);
+
+        $jane = create(User::class);
+        signIn($jane);
+        $this->putJson(route('records.update', $this->validRecord([
+            'record' => $record->id,
+            'title' => 'updated title',
+            'status' => Record::STATUS_DRAFT
+        ], $john)))->assertStatus(403);
     }
+
 
     /** @test */
     function it_can_delete_records()

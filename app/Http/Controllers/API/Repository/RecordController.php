@@ -3,6 +3,7 @@
 namespace MinhD\Http\Controllers\API\Repository;
 
 use MinhD\Http\Controllers\Controller;
+use MinhD\Http\Requests\StoreRecord;
 use MinhD\Repository\Record;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,10 +40,10 @@ class RecordController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request|StoreRecord $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRecord $request)
     {
         $record = Record::create($request->all());
         return response($record, Response::HTTP_CREATED);
@@ -60,24 +61,13 @@ class RecordController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \MinhD\Repository\Record $record
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Record $record)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request|StoreRecord $request
      * @param  \MinhD\Repository\Record $record
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Record $record)
+    public function update(StoreRecord $request, Record $record)
     {
         $record->update($request->all());
         return response($record, Response::HTTP_ACCEPTED);
