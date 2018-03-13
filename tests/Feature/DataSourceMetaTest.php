@@ -25,4 +25,48 @@ class DataSourceMetaTest extends MySQLTestCase
             $dataSource->fresh()->id
         );
     }
+
+    /** @test */
+    function can_filter_by_meta_key()
+    {
+        $user = signIn();
+        create(DataSource::class, 3, ['user_id' => $user->id]);
+        $dataSource = create(DataSource::class, 1, ['user_id' => $user->id]);
+        $dataSource->meta = [
+            'key' => 'first-key'
+        ];
+        $dataSource->save();
+
+        $this->getJson(route('datasources.index', [
+            'meta_key' => 'first-key'
+        ]))->assertSee($dataSource->id);
+    }
+
+    /** @test */
+    function it_can_filter_by_nested_key()
+    {
+        $user = signIn();
+        create(DataSource::class, 3, ['user_id' => $user->id]);
+        $dataSource = create(DataSource::class, 1, ['user_id' => $user->id]);
+        $dataSource->meta = [
+            'nested' => [
+                'key' => 'val'
+            ],
+            'level_1' => [
+                'level_2' => [
+                    'level_3' => 'value'
+                ],
+                'level_2_2' => false
+            ]
+        ];
+        $dataSource->save();
+
+        $this->getJson(route('datasources.index', [
+            'meta_nested/key' => 'val'
+        ]))->assertJsonCount(1)->assertSee($dataSource->id);
+
+        $this->getJson(route('datasources.index', [
+            'meta_level_1/level_2/level_3' => 'value'
+        ]))->assertJsonCount(1)->assertSee($dataSource->id);
+    }
 }

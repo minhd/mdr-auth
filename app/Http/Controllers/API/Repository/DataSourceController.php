@@ -22,10 +22,25 @@ class DataSourceController extends Controller
     {
         $filters = getPaginationFilters($request);
 
-        $paginator = (new DataSource())
+        $result = (new DataSource())
             ->where('user_id', auth()->user()->id)
-            ->offset($filters['offset'])
-            ->paginate($filters['limit']);
+            ->offset($filters['offset']);
+
+        // meta_rifcs/key = fish
+        // rifcs->key = fish
+        $meta = collect($request->all())->filter(function($item) {
+            return !starts_with($item, "meta_");
+        })->flip()->map(function($item) {
+            return str_replace("meta_", "", $item);
+        })->map(function($item){
+            return str_replace("/", "->", $item);
+        })->flip();
+
+        foreach ($meta as $field => $value) {
+            $result = $result->where("meta->$field", $value);
+        }
+
+        $paginator = $result->paginate($filters['limit']);
 
         $links = getPaginatedLinksForHeader($paginator);
 
