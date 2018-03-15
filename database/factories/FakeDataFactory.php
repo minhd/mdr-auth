@@ -54,3 +54,11 @@ $factory->define(\MinhD\Repository\Record::class, function (Faker $faker){
         'data_source_id' => factory(MinhD\Repository\DataSource::class)->create()->id
     ];
 });
+
+$factory->define(\MinhD\Repository\Version::class, function(Faker $faker){
+    return [
+        'status' => \MinhD\Repository\Version::STATUS_SUPERSEDED,
+        'data' => $faker->paragraph,
+        'record_id' => factory(\MinhD\Repository\Record::class)->create()->id
+    ];
+});

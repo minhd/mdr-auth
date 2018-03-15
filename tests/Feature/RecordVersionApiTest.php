@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use MinhD\Repository\DataSource;
 use MinhD\Repository\Record;
 use MinhD\Repository\Version;
 use Tests\TestCase;
@@ -15,13 +16,15 @@ class RecordVersionApiTest extends TestCase
     function it_shows_all_versions_for_a_record()
     {
         $record = create(Record::class);
-        $record->versions()->create([
+        create(Version::class, 1, [
             'status' => Version::STATUS_CURRENT,
-            'data' => 'current_ver'
+            'data' => 'current_ver',
+            'record_id' => $record->id
         ]);
-        $record->versions()->create([
+        create(Version::class, 1, [
             'status' => Version::STATUS_SUPERSEDED,
-            'data' => 'prev_ver'
+            'data' => 'prev_ver',
+            'record_id' => $record->id
         ]);
 
         $this->getJson(route('records.versions.index', [
@@ -34,14 +37,9 @@ class RecordVersionApiTest extends TestCase
     /** @test */
     function it_show_a_specific_version()
     {
-        $record = create(Record::class);
-        $record->versions()->create([
-            'status' => Version::STATUS_CURRENT,
-            'data' => 'current_ver'
-        ]);
-        $version = $record->versions()->first();
+        $version = create(Version::class, 1, ['data' => 'current_ver']);
         $this->getJson(route('records.versions.show', [
-            'record' => $record,
+            'record' => $version->record,
             'version' => $version
         ]))->assertStatus(200)
             ->assertSee("current_ver");
@@ -53,6 +51,8 @@ class RecordVersionApiTest extends TestCase
         $record = create(Record::class);
 
         $this->assertEquals(0, $record->fresh()->versions->count());
+
+        signIn($record->datasource->owner);
 
         $this->postJson(route('records.versions.store', [
             'record' => $record
@@ -67,15 +67,12 @@ class RecordVersionApiTest extends TestCase
     /** @test */
     function it_updates_a_version()
     {
-        $record = create(Record::class);
-        $record->versions()->create([
-            'status' => Version::STATUS_CURRENT,
-            'data' => 'current_ver'
-        ]);
-        $version = $record->fresh()->versions()->first();
+        $version = create(Version::class);
+
+        signIn($version->record->datasource->owner);
 
         $this->putJson(route('records.versions.update', [
-            'record' => $record,
+            'record' => $version->record,
             'version' => $version
         ]), [
             'status' => VERSION::STATUS_SUPERSEDED,
@@ -88,18 +85,42 @@ class RecordVersionApiTest extends TestCase
     /** @test */
     function it_deletes_the_version()
     {
-        $record = create(Record::class);
-        $record->versions()->create([
-            'status' => Version::STATUS_CURRENT,
-            'data' => 'current_ver'
-        ]);
-        $version = $record->fresh()->versions()->first();
+        $version = create(Version::class);
+
+        signIn($version->record->datasource->owner);
 
         $this->deleteJson(route('records.versions.destroy', [
-            'record' => $record->id,
+            'record' => $version->record,
             'version' => $version->id
         ]))->assertStatus(202);
 
         $this->assertNull(Version::find($version->id));
+    }
+
+    /** @test */
+    function it_disallow_creating_version_without_logging_in()
+    {
+        $record = create(Record::class);
+        $this->assertEquals(0, $record->fresh()->versions->count());
+        $this->postJson(route('records.versions.store', [
+            'record' => $record
+        ]), [
+            'status' => VERSION::STATUS_CURRENT,
+            'data' => 'current'
+        ])->assertStatus(403);
+    }
+
+    /** @test */
+    function it_disallow_updating_of_version_they_dont_own()
+    {
+        $version = create(Version::class);
+
+        signIn();
+        $this->putJson(route('records.versions.update', [
+            'record' => $version->record,
+            'version' => $version
+        ]), [
+            'status' => VERSION::STATUS_SUPERSEDED
+        ])->assertStatus(403);
     }
 }

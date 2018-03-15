@@ -3,6 +3,7 @@
 namespace MinhD\Http\Controllers\API\Repository;
 
 use MinhD\Http\Controllers\Controller;
+use MinhD\Http\Requests\StoreVersion;
 use MinhD\Repository\Record;
 use MinhD\Repository\Version;
 use Illuminate\Http\Request;
@@ -24,11 +25,11 @@ class RecordVersionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request|StoreVersion $request
      * @param Record $record
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Record $record)
+    public function store(StoreVersion $request, Record $record)
     {
         $version = $record->versions()->create($request->all());
         return response($version, Response::HTTP_CREATED);
@@ -49,11 +50,12 @@ class RecordVersionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request|StoreVersion $request
+     * @param Record $record
      * @param Version $version
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Record $record, Version $version)
+    public function update(StoreVersion $request, Record $record, Version $version)
     {
         $version->update($request->all());
         return response($version, Response::HTTP_ACCEPTED);
@@ -62,11 +64,12 @@ class RecordVersionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Record $record
+     * @param StoreVersion $request
+     * @param StoreVersion|Record $record
      * @param Version $version
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Record $record, Version $version)
+    public function destroy(StoreVersion $request, Record $record, Version $version)
     {
         $version->delete();
         return response("", Response::HTTP_ACCEPTED);
