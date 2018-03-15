@@ -17,7 +17,7 @@ class RecordsApiTest extends TestCase
     function shows_all_records()
     {
         $dataSource = create(DataSource::class);
-        create(Record::class, 30, ['data_source_id' => $dataSource->id]);
+        create(Record::class, ['data_source_id' => $dataSource->id], 30);
 
         $result = $this->getJson(route('records.index'));
         $result->assertStatus(200);
@@ -27,8 +27,8 @@ class RecordsApiTest extends TestCase
     /** @test */
     function records_only_show_published()
     {
-        $published = create(Record::class, 1, ['status' => Record::STATUS_PUBLISHED,]);
-        $draft = create(Record::class, 1, ['status' => Record::STATUS_DRAFT,]);
+        $published = create(Record::class, ['status' => Record::STATUS_PUBLISHED,]);
+        $draft = create(Record::class, ['status' => Record::STATUS_DRAFT,]);
 
         $this->getJson(route('records.index'))
             ->assertSee($published->id)
@@ -38,8 +38,8 @@ class RecordsApiTest extends TestCase
     /** @test */
     function records_status_filter()
     {
-        $published = create(Record::class, 1, ['status' => Record::STATUS_PUBLISHED]);
-        $draft = create(Record::class, 1, ['status' => Record::STATUS_DRAFT]);
+        $published = create(Record::class, ['status' => Record::STATUS_PUBLISHED]);
+        $draft = create(Record::class, ['status' => Record::STATUS_DRAFT]);
 
         $this->getJson(route('records.index', ['status' => Record::STATUS_DRAFT]))
             ->assertSee($draft->id)
@@ -50,10 +50,10 @@ class RecordsApiTest extends TestCase
     function records_dsid_filter()
     {
         $dataSource1 = create(DataSource::class);
-        create(Record::class, 2, ['data_source_id' => $dataSource1->id]);
+        create(Record::class, ['data_source_id' => $dataSource1->id], 2);
         $record1 = Record::where('data_source_id', $dataSource1->id)->first();
         $dataSource2 = create(DataSource::class);
-        create(Record::class, 5, ['data_source_id' => $dataSource2->id]);
+        create(Record::class, ['data_source_id' => $dataSource2->id], 5);
         $record2 = Record::where('data_source_id', $dataSource2->id)->first();
 
         $this->getJson(route('records.index', ['data_source_id' => $dataSource2->id]))
@@ -64,7 +64,7 @@ class RecordsApiTest extends TestCase
     /** @test */
     function it_shows_link_pagination_on_header()
     {
-        create(Record::class, 30);
+        create(Record::class, [], 30);
         $result = $this->getJson(route('records.index'));
         $result->assertStatus(200);
 
@@ -91,7 +91,7 @@ class RecordsApiTest extends TestCase
     protected function validRecord($overrides = [], $user = null)
     {
         $user = $user ?: signIn();
-        $dataSource = create(DataSource::class, 1, ['user_id' => $user]);
+        $dataSource = create(DataSource::class, ['user_id' => $user]);
         return array_merge([
             'title' => 'some sample record',
             'status' => Record::STATUS_DRAFT,
@@ -145,8 +145,8 @@ class RecordsApiTest extends TestCase
     function it_updates_records()
     {
         $user = signIn();
-        $dataSource = create(DataSource::class, 1, ['user_id' => $user->id]);
-        $record = create(Record::class, 1, ['data_source_id' => $dataSource->id]);
+        $dataSource = create(DataSource::class, ['user_id' => $user->id]);
+        $record = create(Record::class, ['data_source_id' => $dataSource->id]);
 
         $this->putJson(route('records.update', [
             'record' => $record->id,
@@ -158,8 +158,8 @@ class RecordsApiTest extends TestCase
     function it_disallows_updating_records_user_dont_own()
     {
         $john = signIn();
-        $dataSource = create(DataSource::class, 1, ['user_id' => $john->id]);
-        $record = create(Record::class, 1, ['data_source_id' => $dataSource->id]);
+        $dataSource = create(DataSource::class, ['user_id' => $john->id]);
+        $record = create(Record::class, ['data_source_id' => $dataSource->id]);
 
         $jane = create(User::class);
         signIn($jane);

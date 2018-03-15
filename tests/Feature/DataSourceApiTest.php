@@ -16,7 +16,7 @@ class DataSourceApiTest extends TestCase
     function it_shows_some_datasources()
     {
         $user = create(User::class);
-        create(DataSource::class, 20, ['user_id' => $user->id]);
+        create(DataSource::class, ['user_id' => $user->id], 20);
         signIn($user);
 
         $result = $this->getJson(route('datasources.index'));
@@ -28,9 +28,9 @@ class DataSourceApiTest extends TestCase
     function only_datasource_owned_can_be_listed()
     {
         $user = create(User::class);
-        $dataSource1 = create(DataSource::class, 1, ['user_id' => $user->id]);
+        $dataSource1 = create(DataSource::class, ['user_id' => $user->id]);
         $anotherUser = create(User::class);
-        $dataSource2 = create(DataSource::class, 1, ['user_id' => $anotherUser->id]);
+        $dataSource2 = create(DataSource::class, ['user_id' => $anotherUser->id]);
         signIn($user);
 
         $this->getJson(route('datasources.index'))
@@ -44,7 +44,7 @@ class DataSourceApiTest extends TestCase
     function it_shows_a_single_datasource()
     {
         $user = create(User::class);
-        $dataSource = create(DataSource::class, 1, ['user_id' => $user->id]);
+        $dataSource = create(DataSource::class, ['user_id' => $user->id]);
         signIn($user);
 
         $this->getJson(route('datasources.show', ['datasource' => $dataSource->id]))
@@ -56,7 +56,7 @@ class DataSourceApiTest extends TestCase
     function it_shows_link_pagination_on_header()
     {
         $user = create(User::class);
-        create(DataSource::class, 30, ['user_id' => $user->id]);
+        create(DataSource::class, ['user_id' => $user->id], 30);
         signIn($user);
 
         // GET /
@@ -74,7 +74,7 @@ class DataSourceApiTest extends TestCase
     function it_shows_previous_link_on_page_2()
     {
         $user = create(User::class);
-        create(DataSource::class, 30, ['user_id' => $user->id]);
+        create(DataSource::class, ['user_id' => $user->id], 30);
         signIn($user);
 
         $result = $this->getJson(route('datasources.index') . "?page=2");

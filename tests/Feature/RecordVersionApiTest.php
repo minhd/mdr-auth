@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use MinhD\Repository\DataSource;
 use MinhD\Repository\Record;
 use MinhD\Repository\Version;
 use Tests\TestCase;
@@ -16,12 +15,12 @@ class RecordVersionApiTest extends TestCase
     function it_shows_all_versions_for_a_record()
     {
         $record = create(Record::class);
-        create(Version::class, 1, [
+        create(Version::class, [
             'status' => Version::STATUS_CURRENT,
             'data' => 'current_ver',
             'record_id' => $record->id
         ]);
-        create(Version::class, 1, [
+        create(Version::class, [
             'status' => Version::STATUS_SUPERSEDED,
             'data' => 'prev_ver',
             'record_id' => $record->id
@@ -37,7 +36,7 @@ class RecordVersionApiTest extends TestCase
     /** @test */
     function it_show_a_specific_version()
     {
-        $version = create(Version::class, 1, ['data' => 'current_ver']);
+        $version = create(Version::class, ['data' => 'current_ver']);
         $this->getJson(route('records.versions.show', [
             'record' => $version->record,
             'version' => $version

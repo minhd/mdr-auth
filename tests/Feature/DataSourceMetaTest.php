@@ -30,8 +30,8 @@ class DataSourceMetaTest extends MySQLTestCase
     function can_filter_by_meta_key()
     {
         $user = signIn();
-        create(DataSource::class, 3, ['user_id' => $user->id]);
-        $dataSource = create(DataSource::class, 1, ['user_id' => $user->id]);
+        create(DataSource::class, ['user_id' => $user->id], 3);
+        $dataSource = create(DataSource::class, ['user_id' => $user->id]);
         $dataSource->meta = [
             'key' => 'first-key'
         ];
@@ -46,8 +46,8 @@ class DataSourceMetaTest extends MySQLTestCase
     function it_can_filter_by_nested_key()
     {
         $user = signIn();
-        create(DataSource::class, 3, ['user_id' => $user->id]);
-        $dataSource = create(DataSource::class, 1, ['user_id' => $user->id]);
+        create(DataSource::class, ['user_id' => $user->id], 3);
+        $dataSource = create(DataSource::class, ['user_id' => $user->id]);
         $dataSource->meta = [
             'nested' => [
                 'key' => 'val'
