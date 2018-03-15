@@ -22,6 +22,11 @@ class Record extends Model
         return $this->belongsTo(DataSource::class, 'data_source_id');
     }
 
+    public function getOwnerAttribute()
+    {
+        return $this->datasource->owner;
+    }
+
     public function versions()
     {
         return $this->hasMany(Version::class);

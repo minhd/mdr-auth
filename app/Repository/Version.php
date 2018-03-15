@@ -19,4 +19,14 @@ class Version extends Model
     {
         return $this->belongsTo(Record::class, 'record_id');
     }
+
+    public function getDataSourceAttribute()
+    {
+        return $this->record->datasource;
+    }
+
+    public function getOwnerAttribute()
+    {
+        return $this->datasource->owner;
+    }
 }

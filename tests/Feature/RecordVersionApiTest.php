@@ -51,7 +51,7 @@ class RecordVersionApiTest extends TestCase
 
         $this->assertEquals(0, $record->fresh()->versions->count());
 
-        signIn($record->datasource->owner);
+        signIn($record->owner);
 
         $this->postJson(route('records.versions.store', [
             'record' => $record
@@ -68,7 +68,7 @@ class RecordVersionApiTest extends TestCase
     {
         $version = create(Version::class);
 
-        signIn($version->record->datasource->owner);
+        signIn($version->owner);
 
         $this->putJson(route('records.versions.update', [
             'record' => $version->record,
@@ -86,7 +86,7 @@ class RecordVersionApiTest extends TestCase
     {
         $version = create(Version::class);
 
-        signIn($version->record->datasource->owner);
+        signIn($version->owner);
 
         $this->deleteJson(route('records.versions.destroy', [
             'record' => $version->record,
