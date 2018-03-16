@@ -16,7 +16,7 @@ class CreateDataSourcesTable extends Migration
         Schema::create('data_sources', function (Blueprint $table) {
             $table->uuid('id');
             $table->primary('id');
-            $table->uuid('user_id');
+            $table->integer('user_id');
             $table->string('title');
             $table->mediumText('description')->nullable();
             $table->json('meta')->nullable();
