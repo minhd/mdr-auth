@@ -4,6 +4,7 @@ namespace MinhD\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use MinhD\Http\Middleware\CheckRole;
+use MinhD\Http\Middleware\ProfileJsonResponse;
 
 class Kernel extends HttpKernel
 {
@@ -41,6 +42,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
+            ProfileJsonResponse::class
         ],
     ];
 
