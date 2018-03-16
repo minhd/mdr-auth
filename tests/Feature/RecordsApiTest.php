@@ -170,7 +170,6 @@ class RecordsApiTest extends TestCase
         ], $john)))->assertStatus(403);
     }
 
-
     /** @test */
     function it_can_delete_records()
     {

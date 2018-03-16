@@ -20,6 +20,7 @@ class CreateRecordsTable extends Migration
             $table->string('status');
             $table->uuid('data_source_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

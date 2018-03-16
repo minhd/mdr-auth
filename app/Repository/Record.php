@@ -3,15 +3,17 @@
 namespace MinhD\Repository;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use MinhD\Uuids;
 
 class Record extends Model
 {
-    use Uuids;
+    use Uuids, SoftDeletes;
 
     public $incrementing = false;
 
     public $fillable = ['title', 'status', 'data_source_id'];
+    protected $dates = ['deleted_at'];
 
     const STATUS_PUBLISHED = 'published';
     const STATUS_DRAFT = 'draft';
