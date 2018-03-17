@@ -7,7 +7,12 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+
+window.Vue = Vue;
+
+window.Vue.use(VueRouter);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,6 +37,26 @@ Vue.component(
     require('./components/passport/PersonalAccessTokens.vue')
 );
 
+const router = new VueRouter({
+    mode: 'hash',
+    routes: [
+        {
+            path: '/login',
+            name: 'login',
+            component: require('./pages/Login')
+        },
+        {
+            path: '/register',
+            name: 'register',
+            component: require('./pages/Register')
+        }
+    ],
+});
+
+import App from './pages/App.vue';
+
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    components: { App },
+    router
 });
