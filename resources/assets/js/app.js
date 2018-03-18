@@ -8,19 +8,8 @@
 require('./bootstrap');
 
 import Vue from 'vue';
-import VueRouter from 'vue-router';
 
 window.Vue = Vue;
-
-window.Vue.use(VueRouter);
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
 Vue.component(
     'passport-clients',
@@ -37,22 +26,11 @@ Vue.component(
     require('./components/passport/PersonalAccessTokens.vue')
 );
 
-const router = new VueRouter({
-    mode: 'hash',
-    routes: [
-        {
-            path: '/login',
-            name: 'login',
-            component: require('./pages/Login')
-        },
-        {
-            path: '/register',
-            name: 'register',
-            component: require('./pages/Register')
-        }
-    ],
-});
+Vue.prototype.logout = function() {
+    axios.post('/logout');
+};
 
+import router from './router.js';
 import App from './pages/App.vue';
 
 const app = new Vue({

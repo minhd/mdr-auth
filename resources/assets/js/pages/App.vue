@@ -26,6 +26,10 @@
                 showSidebar: false
             }
         },
+        created() {
+//            axios.post('/logout');
+//            axios.get('/api/user');
+        },
         computed: {
             mainAreaClass () {
                 if (this.showSidebar) {

@@ -14,6 +14,10 @@
                 <router-link class="nav-item nav-link" :to="{ name: 'register' }">Register</router-link>
             </li>
 
+            <li class="nav-item">
+                <a href="" class="nav-item nav-link" @click.prevent="logout">Logout</a>
+            </li>
+
             <li class="nav-item dropdown">
                 <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
@@ -29,5 +33,7 @@
 </template>
 
 <script>
-    export default {}
+    export default {
+
+    }
 </script>
