@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import UserService from "./services/UserService";
+import store from "./store.js"
 
 Vue.use(Router);
 
@@ -15,11 +15,11 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     if (to.fullPath !== "/login") {
-        UserService.get().then(response => {
-            next();
-        }).catch(error => {
-            router.push('/login');
-        })
+        if (store.getters.isLoggedIn) {
+            next()
+        } else {
+            store.dispatch("logout").then(() => router.push('/login'));
+        }
     }else{
         next();
     }

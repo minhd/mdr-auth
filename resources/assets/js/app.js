@@ -4,13 +4,13 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import UserService from "./services/UserService";
-
 require('./bootstrap');
 
 import Vue from 'vue';
+import Vuex from 'vuex'
 
 window.Vue = Vue;
+Vue.use(Vuex);
 
 Vue.component(
     'passport-clients',
@@ -28,14 +28,17 @@ Vue.component(
 );
 
 Vue.prototype.logout = function() {
-    UserService.logout().then(() => location.reload());
+    this.$store.dispatch('logout').then(this.$router.push('/login'));
 };
 
+import store from './store.js';
 import router from './router.js';
+
 import App from './pages/App.vue';
 
 const app = new Vue({
     el: '#app',
     components: { App },
-    router
+    router,
+    store
 });

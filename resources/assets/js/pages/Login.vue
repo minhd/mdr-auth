@@ -9,7 +9,6 @@
 </template>
 
 <script>
-    import UserService from '../services/UserService';
 
     export default {
         data () {
@@ -22,18 +21,14 @@
         },
 
         created () {
-            if (UserService.isLoggedIn()) {
-                console.log("User is logged in");
-            }
-
             this.target = this.$route.query.target ? this.$route.query.target : '/dashboard';
         },
 
         methods: {
             login () {
-                let that = this;
-                UserService.login(this.form.email, this.form.password)
-                    .then(() => that.$router.push(that.target));
+                this.$store.dispatch("login", {
+                    email: this.form.email, password:this.form.password
+                }).then(() => this.$router.push(this.target));
             }
         }
 
