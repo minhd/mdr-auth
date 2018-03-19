@@ -25029,41 +25029,45 @@ module.exports = __webpack_require__(79);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__router_js__ = __webpack_require__(58);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__pages_App_vue__ = __webpack_require__(70);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__pages_App_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__pages_App_vue__);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_UserService__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router_js__ = __webpack_require__(58);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_App_vue__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_App_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__pages_App_vue__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+
+
 __webpack_require__(17);
 
 
 
-window.Vue = __WEBPACK_IMPORTED_MODULE_0_vue___default.a;
+window.Vue = __WEBPACK_IMPORTED_MODULE_1_vue___default.a;
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('passport-clients', __webpack_require__(42));
+__WEBPACK_IMPORTED_MODULE_1_vue___default.a.component('passport-clients', __webpack_require__(42));
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('passport-authorized-clients', __webpack_require__(48));
+__WEBPACK_IMPORTED_MODULE_1_vue___default.a.component('passport-authorized-clients', __webpack_require__(48));
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('passport-personal-access-tokens', __webpack_require__(53));
+__WEBPACK_IMPORTED_MODULE_1_vue___default.a.component('passport-personal-access-tokens', __webpack_require__(53));
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.logout = function () {
-    axios.post('/auth/logout');
+__WEBPACK_IMPORTED_MODULE_1_vue___default.a.prototype.logout = function () {
+    __WEBPACK_IMPORTED_MODULE_0__services_UserService__["a" /* default */].logout().then(function () {
+        return location.reload();
+    });
 };
 
 
 
 
-var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
+var app = new __WEBPACK_IMPORTED_MODULE_1_vue___default.a({
     el: '#app',
-    components: { App: __WEBPACK_IMPORTED_MODULE_2__pages_App_vue___default.a },
-    router: __WEBPACK_IMPORTED_MODULE_1__router_js__["a" /* default */]
+    components: { App: __WEBPACK_IMPORTED_MODULE_3__pages_App_vue___default.a },
+    router: __WEBPACK_IMPORTED_MODULE_2__router_js__["a" /* default */]
 });
 
 /***/ }),
@@ -49452,15 +49456,31 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(59);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_UserService__ = __webpack_require__(62);
+
 
 
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
 
-/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
+var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
     mode: 'hash',
     routes: [{ path: '/login', name: 'login', component: __webpack_require__(60) }, { path: '/register', name: 'register', component: __webpack_require__(68) }, { path: '/dashboard', name: 'dashboard', component: __webpack_require__(83) }]
-}));
+});
+
+router.beforeEach(function (to, from, next) {
+    if (to.fullPath !== "/login") {
+        __WEBPACK_IMPORTED_MODULE_2__services_UserService__["a" /* default */].get().then(function (response) {
+            next();
+        }).catch(function (error) {
+            router.push('/login');
+        });
+    } else {
+        next();
+    }
+});
+
+/* harmony default export */ __webpack_exports__["a"] = (router);
 
 /***/ }),
 /* 59 */
@@ -52216,7 +52236,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return window.localStorage.getItem(this.lsKey) === null;
     },
     get: function get() {
-        return axios.get('/api/user');
+        return axios.get('/auth/profile');
     }
 });
 

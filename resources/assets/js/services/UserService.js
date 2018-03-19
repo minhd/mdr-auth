@@ -24,6 +24,6 @@ export default {
     },
 
     get() {
-        return axios.get('/api/user');
+        return axios.get('/auth/profile');
     }
 }

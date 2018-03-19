@@ -12,6 +12,15 @@ class AuthController extends Controller
 {
     use AuthenticatesUsers;
 
+    public function get()
+    {
+        if (auth()->user()) {
+            return response(auth()->user(), 200);
+        } else {
+            return response("", 403);
+        }
+    }
+
     /**
      * Login
      *
