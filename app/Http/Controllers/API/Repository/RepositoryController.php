@@ -5,6 +5,7 @@ namespace MinhD\Http\Controllers\API\Repository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use MinhD\Http\Controllers\Controller;
+use MinhD\User;
 
 class RepositoryController extends Controller
 {

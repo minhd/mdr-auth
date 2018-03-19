@@ -48,4 +48,9 @@ class User extends Authenticatable
 
         throw new \Exception("No role $roleName exists");
     }
+
+    public function makeApiToken()
+    {
+        return $this->createToken('API')->accessToken;
+    }
 }

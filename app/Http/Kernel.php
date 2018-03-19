@@ -37,6 +37,9 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \MinhD\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+
+            // allow access from the same app
+            \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class
         ],
 
         'api' => [
