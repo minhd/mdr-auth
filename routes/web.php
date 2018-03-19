@@ -13,6 +13,9 @@
 
 Route::view('/', 'app');
 
-Auth::routes();
+Route::post('/auth/login', 'AuthController@login');
+Route::post('/auth/logout', 'AuthController@logout');
+
+//Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

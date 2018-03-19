@@ -27,7 +27,7 @@ Vue.component(
 );
 
 Vue.prototype.logout = function() {
-    axios.post('/logout');
+    axios.post('/auth/logout');
 };
 
 import router from './router.js';
