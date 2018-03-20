@@ -14,6 +14,10 @@
 
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
+    <script>
+        window.pwg = "{!! base64_encode(json_encode(config('auth.password_grants'))) !!}"
+    </script>
+
 </head>
 <body>
     <div id="app">

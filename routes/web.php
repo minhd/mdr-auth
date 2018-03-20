@@ -11,7 +11,7 @@
 |
 */
 
-Route::view('/', 'app');
+Route::view('/', 'app')->name('login');
 
 Route::post('/auth/login', 'AuthController@login');
 Route::post('/auth/logout', 'AuthController@logout');

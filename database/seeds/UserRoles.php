@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use MinhD\User;
 
 class UserRoles extends Seeder
 {

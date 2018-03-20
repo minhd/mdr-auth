@@ -29,10 +29,4 @@ class UserApiTest extends TestCase
         $response->assertStatus(201);
         $response->assertSee($user->name);
     }
-
-    /** @test */
-    function it_redirects_user_if_not_logged_in()
-    {
-        $this->get('/api/user')->assertStatus(302);
-    }
 }

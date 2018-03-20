@@ -45,10 +45,12 @@ const store = new Vuex.Store({
     actions: {
         login(context, {email, password}) {
 
+            let pwg = JSON.parse(atob(window.pwg));
+            
             return axios.post('/oauth/token', {
                 'grant_type': 'password',
-                'client_id': '4',
-                'client_secret': 'VOtdzpw5UieE4YVoknz0MIQ73ygDBRhVPqFvZOz3',
+                'client_id': pwg.client_id,
+                'client_secret': pwg.client_secret,
                 'username': email,
                 'password': password,
                 'scope': '',

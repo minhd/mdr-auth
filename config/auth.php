@@ -2,6 +2,11 @@
 
 return [
 
+    'password_grants' => [
+        'client_id' => env("PWG_CLIENT_ID", 1),
+        'client_secret' => env("PWG_CLIENT_SECRET", "k8MJVExwXdMIpTo7VgciQemWbj0VtBee61kQHcye")
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
