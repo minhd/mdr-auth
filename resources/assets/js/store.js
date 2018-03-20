@@ -5,41 +5,58 @@ import VuexPersistence from 'vuex-persist'
 Vue.use(Vuex);
 
 const vuexLocal = new VuexPersistence({
-    storage: window.localStorage
+    storage: window.localStorage,
+    key: "minhd.mdr"
 });
 
 const store = new Vuex.Store({
     state: {
-        token: null
+        token: null,
+        user: null
     },
     mutations: {
-        setToken (state, token) {
+        setToken(state, token) {
             state.token = token
+        },
+        setUser(state, user) {
+            state.user = user;
         }
     },
     getters: {
         isLoggedIn: state => {
             return state.token !== null
+        },
+        user: state => {
+            return state.user;
+        },
+        api: state => {
+            if (!state.token) {
+                return null;
+            }
+
+            return axios.create({
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + state.token.access_token
+                }
+            });
         }
     },
     actions: {
-        login (context, {email, password}) {
+        login(context, {email, password}) {
 
             return axios.post('/oauth/token', {
-                'grant_type' : 'password',
-                'client_id' : '4',
-                'client_secret' : 'VOtdzpw5UieE4YVoknz0MIQ73ygDBRhVPqFvZOz3',
-                'username' : email,
-                'password' : password,
-                'scope' : '',
+                'grant_type': 'password',
+                'client_id': '4',
+                'client_secret': 'VOtdzpw5UieE4YVoknz0MIQ73ygDBRhVPqFvZOz3',
+                'username': email,
+                'password': password,
+                'scope': '',
             }).then(({data}) => {
                 context.commit("setToken", data);
+                context.getters.api.get('/api/user')
+                    .then(({data}) => context.commit("setUser", data));
             });
-
-            // return axios.post('/auth/login', {email, password})
-            //     .then(({data}) => {
-            //         context.commit("setToken", data['access_token']);
-            //     })
         },
         logout(context) {
             context.commit("setToken", null);

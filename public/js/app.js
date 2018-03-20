@@ -26005,21 +26005,41 @@ module.exports = Cancel;
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 
 var vuexLocal = new __WEBPACK_IMPORTED_MODULE_2_vuex_persist___default.a({
-    storage: window.localStorage
+    storage: window.localStorage,
+    key: "minhd.mdr"
 });
 
 var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     state: {
-        token: null
+        token: null,
+        user: null
     },
     mutations: {
         setToken: function setToken(state, token) {
             state.token = token;
+        },
+        setUser: function setUser(state, user) {
+            state.user = user;
         }
     },
     getters: {
         isLoggedIn: function isLoggedIn(state) {
             return state.token !== null;
+        },
+        user: function user(state) {
+            return state.user;
+        },
+        api: function api(state) {
+            if (!state.token) {
+                return null;
+            }
+
+            return axios.create({
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + state.token.access_token
+                }
+            });
         }
     },
     actions: {
@@ -26039,12 +26059,11 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
                 var data = _ref2.data;
 
                 context.commit("setToken", data);
+                context.getters.api.get('/api/user').then(function (_ref3) {
+                    var data = _ref3.data;
+                    return context.commit("setUser", data);
+                });
             });
-
-            // return axios.post('/auth/login', {email, password})
-            //     .then(({data}) => {
-            //         context.commit("setToken", data['access_token']);
-            //     })
         },
         logout: function logout(context) {
             context.commit("setToken", null);
@@ -55663,19 +55682,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     index: function index() {
-        axios.interceptors.request.use(function (config) {
-            var token = __WEBPACK_IMPORTED_MODULE_0__store_js__["a" /* default */].getters.isLoggedIn ? __WEBPACK_IMPORTED_MODULE_0__store_js__["a" /* default */].state.token.access_token : null;
-
-            if (token !== null) {
-                config.headers.Authorization = 'Bearer ' + token;
-            }
-
-            return config;
-        }, function (err) {
-            return Promise.reject(err);
-        });
-
-        return axios.get('/api/repository/datasources');
+        return __WEBPACK_IMPORTED_MODULE_0__store_js__["a" /* default */].getters.api.get('/api/repository/datasources');
     }
 });
 
@@ -56127,7 +56134,7 @@ var render = function() {
         _c(
           "div",
           {
-            staticClass: "col-12 col-md-9 col-xl-10",
+            staticClass: "col-12 col-md-12 col-xl-12",
             class: _vm.mainAreaClass
           },
           [_c("Header"), _vm._v(" "), _c("router-view")],

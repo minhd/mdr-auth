@@ -5,7 +5,7 @@
                 <div class="col-12 col-md-3 col-xl-2 bd-sidebar" v-if="showSidebar">
                     <Sidebar></Sidebar>
                 </div>
-                <div class="col-12 col-md-9 col-xl-10" v-bind:class="mainAreaClass">
+                <div class="col-12 col-md-12 col-xl-12" v-bind:class="mainAreaClass">
                     <Header></Header>
                     <!--<a href="" @click.prevent="showSidebar = !showSidebar">Toggle</a>-->
                     <router-view></router-view>
