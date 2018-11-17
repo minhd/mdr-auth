@@ -12,7 +12,8 @@ const vuexLocal = new VuexPersistence({
 const store = new Vuex.Store({
     state: {
         token: null,
-        user: null
+        user: null,
+        loading: false
     },
     mutations: {
         setToken(state, token) {
@@ -20,6 +21,9 @@ const store = new Vuex.Store({
         },
         setUser(state, user) {
             state.user = user;
+        },
+        setLoading(state, x) {
+            state.loading = x;
         }
     },
     getters: {
@@ -28,6 +32,9 @@ const store = new Vuex.Store({
         },
         user: state => {
             return state.user;
+        },
+        loading: state => {
+            return state.loading
         },
         api: state => {
             if (!state.token) {
@@ -44,9 +51,8 @@ const store = new Vuex.Store({
     },
     actions: {
         login(context, {email, password}) {
-
+            context.commit("setLoading", true);
             let pwg = JSON.parse(atob(window.pwg));
-            
             return axios.post('/oauth/token', {
                 'grant_type': 'password',
                 'client_id': pwg.client_id,
@@ -56,6 +62,7 @@ const store = new Vuex.Store({
                 'scope': '',
             }).then(({data}) => {
                 context.commit("setToken", data);
+                context.commit("setLoading", false);
                 context.getters.api.get('/api/user')
                     .then(({data}) => context.commit("setUser", data));
             });

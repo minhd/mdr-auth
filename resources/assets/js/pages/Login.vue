@@ -20,7 +20,8 @@
                                         <input name="remember" type="checkbox" value="Remember Me"> Remember Me
                                     </label>
                                 </div>
-                                <input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+                                <button type="submit" class="btn btn-lg btn-success btn-block"
+                                        :class="loading ? 'loader' : ''">Login</button>
                             </fieldset>
                         </form>
                         <hr/>
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex'
 
     export default {
         data() {
@@ -41,19 +43,25 @@
                 form: {
                     email: 'admin@localhost', password: 'secret'
                 },
-                target: ''
+                redirect: ''
             }
         },
 
+        computed: {
+            ...mapGetters([
+                'loading'
+            ])
+        },
+
         created() {
-            this.target = this.$route.query.target ? this.$route.query.target : '/dashboard';
+            this.redirect = this.$route.query.redirect ? this.$route.query.redirect : '/dashboard';
         },
 
         methods: {
             login() {
                 this.$store.dispatch("login", {
                     email: this.form.email, password: this.form.password
-                }).then(() => this.$router.push(this.target));
+                }).then(() => this.$router.push(this.redirect));
             }
         }
 
